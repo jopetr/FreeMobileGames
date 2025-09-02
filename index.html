@@ -13,10 +13,8 @@
       background: radial-gradient(circle at top, #0f0f0f, #1a1a1a);
       color: #fff;
     }
-
     #logoHeader { text-align: center; margin-bottom: 1rem; }
     #logoHeader img { max-width: 250px; height: auto; }
-
     #searchContainer { text-align: center; margin-bottom: 1rem; }
     #searchInput {
       width: 80%; max-width: 400px; padding: 0.5rem 1rem;
@@ -24,9 +22,7 @@
       background: #1a1a1a; color: #fff;
     }
     #searchInput::placeholder { color: #aaa; }
-
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-
     .card {
       position: relative; background: #1b1b1b; border-radius: 10px; padding: 1rem;
       box-shadow: inset 0 0 15px rgba(255,140,0,0.05), 0 2px 6px rgba(0,0,0,0.6);
@@ -41,7 +37,6 @@
     .card:hover::after { opacity: 0.3; }
     .card:hover { transform: scale(1.03); box-shadow: inset 0 0 15px rgba(255,165,0,0.1), 0 4px 12px rgba(255,165,0,0.15); }
     .card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; z-index: 1; position: relative; }
-
     iframe { width: 100%; height: 90vh; border: none; margin-top: 1rem; display: none; }
     #backButton { display: none; margin: 1rem auto; padding: 0.5rem 1rem; background: #ff9500; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
     #noResults { text-align: center; margin-top: 2rem; font-size: 1.2rem; color: #ff5555; display: none; }
@@ -52,14 +47,11 @@
   <div id="logoHeader">
     <img src="logo.png" alt="Free Mobile Games Logo">
   </div>
-
   <div id="searchContainer">
     <input type="text" id="searchInput" placeholder="Search games...">
   </div>
-
   <div id="games" class="grid"></div>
   <div id="noResults">No games match your search.</div>
-
   <button id="backButton">⬅ Back to Games</button>
   <iframe id="gameFrame"></iframe>
 
@@ -72,7 +64,6 @@
         const text = await res.text();
         const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
 
-        // Remove leading slashes from paths to ensure relative paths work locally and on GitHub Pages
         allGames = parsed.data.map(g => ({
           Name: g.Name,
           Description: g.Description,
@@ -90,9 +81,7 @@
         const searchContainer = document.getElementById("searchContainer");
 
         container.innerHTML = "";
-
-        if (games.length === 0) document.getElementById("noResults").style.display = "block";
-        else document.getElementById("noResults").style.display = "none";
+        document.getElementById("noResults").style.display = games.length === 0 ? "block" : "none";
 
         games.forEach(g => {
           const card = document.createElement("div");
