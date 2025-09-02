@@ -65,16 +65,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Detect GitHub Pages
-      const isGitHubPages = window.location.hostname.includes("github.io");
-      const repoName = "free-mobile-games.com"; // <-- Set your repo name
-
-      function getBasePath(path) {
-        if (!path) return "";
-        path = path.replace(/^\/+/, ""); // remove leading slashes
-        return isGitHubPages ? `${repoName}/${path}` : path;
-      }
-
       let allGames = [];
 
       async function loadGames() {
@@ -82,11 +72,12 @@
         const text = await res.text();
         const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
 
+        // Remove leading slashes from paths to ensure relative paths work locally and on GitHub Pages
         allGames = parsed.data.map(g => ({
           Name: g.Name,
           Description: g.Description,
-          PreviewURL: getBasePath(g.PreviewURL),
-          GameURL: getBasePath(g.GameURL)
+          PreviewURL: g.PreviewURL.replace(/^\/+/, ''),
+          GameURL: g.GameURL.replace(/^\/+/, '')
         }));
 
         renderGames(allGames);
