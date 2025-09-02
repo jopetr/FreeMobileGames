@@ -3,6 +3,7 @@
 ## Adding games
 
 • Add game files to games/ folder
+
 • Add relevant info to games.csv
 
 ## Testing on Mobile Devices
