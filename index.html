@@ -14,114 +14,37 @@
       color: #fff;
     }
 
-    /* Logo header */
-    #logoHeader {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    #logoHeader img {
-      max-width: 250px;
-      height: auto;
-    }
+    #logoHeader { text-align: center; margin-bottom: 1rem; }
+    #logoHeader img { max-width: 250px; height: auto; }
 
-    /* Search bar */
-    #searchContainer {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
+    #searchContainer { text-align: center; margin-bottom: 1rem; }
     #searchInput {
-      width: 80%;
-      max-width: 400px;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      border: none;
-      outline: none;
-      font-size: 1rem;
-      background: #1a1a1a;
-      color: #fff;
+      width: 80%; max-width: 400px; padding: 0.5rem 1rem;
+      border-radius: 20px; border: none; outline: none; font-size: 1rem;
+      background: #1a1a1a; color: #fff;
     }
-    #searchInput::placeholder {
-      color: #aaa;
-    }
+    #searchInput::placeholder { color: #aaa; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
 
     .card {
-      position: relative;
-      background: #1b1b1b;
-      border-radius: 10px;
-      padding: 1rem;
+      position: relative; background: #1b1b1b; border-radius: 10px; padding: 1rem;
       box-shadow: inset 0 0 15px rgba(255,140,0,0.05), 0 2px 6px rgba(0,0,0,0.6);
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
-      color: #fff;
-      overflow: hidden;
+      text-align: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
+      color: #fff; overflow: hidden;
     }
-
     .card::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 12px;
-      pointer-events: none;
-      background: linear-gradient(45deg, #ffcc33, #ff6600);
-      opacity: 0;
-      transition: opacity 0.3s;
+      content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-radius: 12px; pointer-events: none;
+      background: linear-gradient(45deg, #ffcc33, #ff6600); opacity: 0; transition: opacity 0.3s;
     }
+    .card:hover::after { opacity: 0.3; }
+    .card:hover { transform: scale(1.03); box-shadow: inset 0 0 15px rgba(255,165,0,0.1), 0 4px 12px rgba(255,165,0,0.15); }
+    .card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; z-index: 1; position: relative; }
 
-    .card:hover::after {
-      opacity: 0.3; /* subtle glow */
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: inset 0 0 15px rgba(255,165,0,0.1), 0 4px 12px rgba(255,165,0,0.15);
-    }
-
-    .card img {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      border-radius: 8px;
-      z-index: 1;
-      position: relative;
-    }
-
-    iframe {
-      width: 100%;
-      height: 90vh;
-      border: none;
-      margin-top: 1rem;
-      display: none;
-    }
-
-    #backButton {
-      display: none;
-      margin: 1rem auto;
-      padding: 0.5rem 1rem;
-      background: #ff9500;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #noResults {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 1.2rem;
-      color: #ff5555;
-      display: none;
-    }
+    iframe { width: 100%; height: 90vh; border: none; margin-top: 1rem; display: none; }
+    #backButton { display: none; margin: 1rem auto; padding: 0.5rem 1rem; background: #ff9500; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    #noResults { text-align: center; margin-top: 2rem; font-size: 1.2rem; color: #ff5555; display: none; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
@@ -141,66 +64,78 @@
   <iframe id="gameFrame"></iframe>
 
   <script>
-    let allGames = [];
+    document.addEventListener("DOMContentLoaded", () => {
+      // Detect GitHub Pages
+      const isGitHubPages = window.location.hostname.includes("github.io");
+      const repoName = "free-mobile-games.com"; // <-- Set your repo name
 
-    async function loadGames() {
-      const res = await fetch("games.csv");
-      const text = await res.text();
-      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-      allGames = parsed.data;
-      renderGames(allGames);
-    }
-
-    function renderGames(games) {
-      const container = document.getElementById("games");
-      const iframe = document.getElementById("gameFrame");
-      const backButton = document.getElementById("backButton");
-      const searchContainer = document.getElementById("searchContainer");
-
-      container.innerHTML = "";
-
-      if (games.length === 0) {
-        document.getElementById("noResults").style.display = "block";
-      } else {
-        document.getElementById("noResults").style.display = "none";
+      function getBasePath(path) {
+        if (!path) return "";
+        path = path.replace(/^\/+/, ""); // remove leading slashes
+        return isGitHubPages ? `${repoName}/${path}` : path;
       }
 
-      games.forEach(g => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <img src="${g.PreviewURL}" alt="${g.Name}">
-          <h3>${g.Name}</h3>
-          <p>${g.Description}</p>
-        `;
-        card.addEventListener("click", () => {
-          container.style.display = "none";
-          searchContainer.style.display = "none";
-          iframe.style.display = "block";
-          backButton.style.display = "block";
-          iframe.src = g.GameURL;
+      let allGames = [];
+
+      async function loadGames() {
+        const res = await fetch("games.csv");
+        const text = await res.text();
+        const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+
+        allGames = parsed.data.map(g => ({
+          Name: g.Name,
+          Description: g.Description,
+          PreviewURL: getBasePath(g.PreviewURL),
+          GameURL: getBasePath(g.GameURL)
+        }));
+
+        renderGames(allGames);
+      }
+
+      function renderGames(games) {
+        const container = document.getElementById("games");
+        const iframe = document.getElementById("gameFrame");
+        const backButton = document.getElementById("backButton");
+        const searchContainer = document.getElementById("searchContainer");
+
+        container.innerHTML = "";
+
+        if (games.length === 0) document.getElementById("noResults").style.display = "block";
+        else document.getElementById("noResults").style.display = "none";
+
+        games.forEach(g => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `<img src="${g.PreviewURL}" alt="${g.Name}"><h3>${g.Name}</h3><p>${g.Description}</p>`;
+          card.addEventListener("click", () => {
+            container.style.display = "none";
+            searchContainer.style.display = "none";
+            iframe.style.display = "block";
+            backButton.style.display = "block";
+            iframe.src = g.GameURL;
+          });
+          container.appendChild(card);
         });
-        container.appendChild(card);
+
+        backButton.addEventListener("click", () => {
+          iframe.style.display = "none";
+          backButton.style.display = "none";
+          container.style.display = "grid";
+          searchContainer.style.display = "block";
+          iframe.src = "";
+        });
+      }
+
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        const filtered = allGames.filter(g =>
+          g.Name.toLowerCase().includes(query) || g.Description.toLowerCase().includes(query)
+        );
+        renderGames(filtered);
       });
 
-      backButton.addEventListener("click", () => {
-        iframe.style.display = "none";
-        backButton.style.display = "none";
-        container.style.display = "grid";
-        searchContainer.style.display = "block";
-        iframe.src = "";
-      });
-    }
-
-    document.getElementById("searchInput").addEventListener("input", (e) => {
-      const query = e.target.value.toLowerCase();
-      const filtered = allGames.filter(g =>
-        g.Name.toLowerCase().includes(query) || g.Description.toLowerCase().includes(query)
-      );
-      renderGames(filtered);
+      loadGames();
     });
-
-    loadGames();
   </script>
 </body>
 </html>
