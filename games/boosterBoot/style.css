@@ -1,0 +1,16 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameCanvas {
+  background: linear-gradient(to bottom, #111, #222 60%, #444);
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
